@@ -1,6 +1,4 @@
-
-u = (16, -8, 17, 4)
-v = (12, 17, 4, -4)
+import math
 
 
 def dot(a, b):
@@ -17,7 +15,7 @@ def scalar_mul_vec(scalar, vec):
     return new_vec
 
 
-def orthogonal(a, b):
+def bOrthogonal(a, b):
     return dot(a, b) == 0
 
 
@@ -25,6 +23,35 @@ def proj(u, v):
     return scalar_mul_vec(dot(u, v)/dot(u, u), u)
 
 
-print(proj(u, v))
-print(dot(u, v))
-print(dot(u, u))
+def length(vec):
+    sum = 0
+    for i in range(len(vec)):
+        sum += vec[i]**2
+    return math.sqrt(sum)
+
+
+def sub_vec(a, b):
+    vec = []
+    for i in range(len(a)):
+        vec.append(a[i]-b[i])
+    return vec
+
+
+def add_vec(a, b):
+    vec = []
+    for i in range(len(a)):
+        vec.append(a[i]+b[i])
+    return vec
+
+
+def norm_vec2d(vec):
+    return (-vec[1], vec[0])
+
+
+a = (279, -136)
+c = (-208, -328)
+
+norm = norm_vec2d(sub_vec(a, c))
+
+print(add_vec(norm, a))
+print(add_vec(norm, c))
