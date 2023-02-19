@@ -8,50 +8,67 @@ def dot(a, b):
     return sum
 
 
-def scalar_mul_vec(scalar, vec):
-    new_vec = []
+def mat2x2Det(M):
+    return M[0][0] * M[1][1] - M[0][1]*M[1][0]
+
+
+def mat3x3Det(M):
+    return (M[0][0]*mat2x2Det([[M[1][1], M[1][2]], [M[2][1], M[2][2]]])
+            - M[0][1]*mat2x2Det([[M[1][0], M[2][0]], [M[1][2], M[2][2]]])
+            + M[0][2]*mat2x2Det([[M[1][0], M[2][0]], [M[1][1], M[2][1]]]))
+
+
+def mulVec(s, vec):
+    newV = []
     for i in range(len(vec)):
-        new_vec.append(vec[i]*scalar)
-    return new_vec
+        newV.append(vec[i]*s)
+    return newV
 
 
-def bOrthogonal(a, b):
-    return dot(a, b) == 0
+def matGetColumn(M, n):
+    col = []
+    for i in range(len(M)):
+        col.append(M[i][n])
+    return col
 
 
-def proj(u, v):
-    return scalar_mul_vec(dot(u, v)/dot(u, u), u)
+def matMulMatrices(M1, M2):
+    newMat = []
+    for row in range(len(M1)):
+        newMat.append([])
+        for col in range(len(M2[0])):
+            newMat[row].append(dot(M1[row], matGetColumn(M2, col)))
+    return newMat
 
 
-def length(vec):
-    sum = 0
-    for i in range(len(vec)):
-        sum += vec[i]**2
-    return math.sqrt(sum)
+def matMulScalar(M, s):
+    newMat = []
+    for row in range(len(M)):
+        newMat.append([])
+        for col in range(len(M[0])):
+            newMat[row].append(M[row][col]*s)
+    return newMat
 
 
-def sub_vec(a, b):
-    vec = []
-    for i in range(len(a)):
-        vec.append(a[i]-b[i])
-    return vec
+def matAddMatrices(M1, M2):
+    newMat = []
+    for row in range(len(M1)):
+        newMat.append([])
+        for col in range(len(M1[0])):
+            newMat[row].append(M1[row][col]+M2[row][col])
+    return newMat
 
 
-def add_vec(a, b):
-    vec = []
-    for i in range(len(a)):
-        vec.append(a[i]+b[i])
-    return vec
+def matTranspose(M):
+    newMat = []
+    for col in range(len(matGetColumn(M, 0))):
+        newMat.append(matGetColumn(M, col))
+    return newMat
 
 
-def norm_vec2d(vec):
-    return (-vec[1], vec[0])
+def mat3x3Inverse(M):
+    newMat = []
 
 
-a = (279, -136)
-c = (-208, -328)
-
-norm = norm_vec2d(sub_vec(a, c))
-
-print(add_vec(norm, a))
-print(add_vec(norm, c))
+def proj(u1, v1):
+    return mulVec((dot(u1, v1)/dot(u1, u1)), u1)
