@@ -13,9 +13,12 @@ def mat2x2Det(M):
 
 
 def mat3x3Det(M):
-    return (M[0][0]*mat2x2Det([[M[1][1], M[1][2]], [M[2][1], M[2][2]]])
-            - M[0][1]*mat2x2Det([[M[1][0], M[2][0]], [M[1][2], M[2][2]]])
-            + M[0][2]*mat2x2Det([[M[1][0], M[2][0]], [M[1][1], M[2][1]]]))
+    return (M[0][0]*mat2x2Det([[M[1][1], M[1][2]],
+                               [M[2][1], M[2][2]]])
+            - M[0][1]*mat2x2Det([[M[1][0], M[2][0]],
+                                 [M[1][2], M[2][2]]])
+            + M[0][2]*mat2x2Det([[M[1][0], M[2][0]],
+                                 [M[1][1], M[2][1]]]))
 
 
 def mulVec(s, vec):
@@ -39,6 +42,14 @@ def matMulMatrices(M1, M2):
         for col in range(len(M2[0])):
             newMat[row].append(dot(M1[row], matGetColumn(M2, col)))
     return newMat
+
+# Multiply Multiple Matrices
+
+
+def matMulMatrices(M, matrices):
+    if len(matrices) == 1:
+        return matMulMatrices(M, matrices[0])
+    return matMulMatrices(matMulMatrices(M, matrices[0]), matrices[1:])
 
 
 def matMulScalar(M, s):
