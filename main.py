@@ -12,6 +12,39 @@ def mat2x2Det(M):
     return M[0][0] * M[1][1] - M[0][1]*M[1][0]
 
 
+def mat2x2Inv(M):
+    return matMulScalar([[M[1][1], -M[0][1]], [-M[1][0], M[0][0]]], 1/mat2x2Det(M))
+
+
+def mat3x3Inv(M):
+    adjM = []
+    # Get adjugagte matrix
+    for row in range(3):
+        adjM.append([])
+        for col in range(3):
+            # Get 2x2 cofactor matrix
+            cofactor = []
+            for j in range(3):
+                if j == row:
+                    continue
+                cofactor.append([])
+                for i in range(3):
+                    if i == col:
+                        continue
+                    cofactor[len(cofactor)-1].append(M[i][j])
+            adjM[row].append(mat2x2Det(cofactor))
+    # swap diagonal cells
+    # adjM[0][1], adjM[1][0] = adjM[1][0], adjM[0][1]
+    # adjM[0][2], adjM[2][0] = adjM[2][0], adjM[0][2]
+    # adjM[1][2], adjM[2][1] = adjM[2][1], adjM[1][2]
+    # apply checkerboard pattern
+    for row in range(3):
+        for col in range(3):
+            if (row+col) % 2 != 0:
+                adjM[row][col] *= -1
+    return matMulScalar(adjM, 1/mat3x3Det(M))
+
+
 def mat3x3Det(M):
     return (M[0][0]*mat2x2Det([[M[1][1], M[1][2]],
                                [M[2][1], M[2][2]]])
@@ -84,13 +117,13 @@ def matMulMatrices(M1, M2):
             newMat[row].append(dot(M1[row], matGetColumn(M2, col)))
     return newMat
 
-# Multiply Multiple Matrices
+# # Multiply Multiple Matrices
 
 
-def matMulMatrices(M, matrices):
-    if len(matrices) == 1:
-        return matMulMatrices(M, matrices[0])
-    return matMulMatrices(matMulMatrices(M, matrices[0]), matrices[1:])
+# def matMulMatrices(M, matrices):
+#     if len(matrices) == 1:
+#         return matMulMatrices(M, matrices[0])
+#     return matMulMatrices(matMulMatrices(M, matrices[0]), matrices[1:])
 
 
 def matMulScalar(M, s):
@@ -118,18 +151,11 @@ def matTranspose(M):
     return newMat
 
 
-def mat3x3Inverse(M):
-    newMat = []
-
-
 def proj(u1, v1):
     return mulVec((dot(u1, v1)/dot(u1, u1)), u1)
 
 
-u = [-2, 1, -1]
-v = [-1, -1, 1]
-w = [1, 1, 8]
-
-n = cross(u, v)
-unit_n = unitVec(cross(u, v))
-print(mulVec(dot(unit_n, w), unit_n))
+# print(addVec(mulVec(c1, a), mulVec(c2, b)))
+m = [[1, 1, 4], [0, 2, -6], [1, 1, -1]]
+print(matMulMatrices(mat3x3Inv(m), [[-5], [-18], [-22]]))
+print(matMulMatrices(mat2x2Inv([[-1, 5], [1, -4]]), [[27], [-22]]))
