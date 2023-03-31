@@ -53,6 +53,25 @@ def mat3x3Det(M):
             + M[0][2]*mat2x2Det([[M[1][0], M[1][1]],
                                  [M[2][0], M[2][1]]]))
 
+
+def mat4x4Det(M):
+    det = 0
+    for col in range(4):
+        # Get cofactors
+        # row = 0
+        cofactor = []
+        for j in range(4):
+            if j == 0:
+                continue
+            cofactor.append([])
+            for i in range(4):
+                if i == col:
+                    continue
+                cofactor[-1].append(M[i][j])
+        det += M[0][col] * mat3x3Det(cofactor)
+    return det
+
+
 # u,v are R3 vectors
 
 
@@ -151,11 +170,64 @@ def matTranspose(M):
     return newMat
 
 
-def proj(u1, v1):
-    return mulVec((dot(u1, v1)/dot(u1, u1)), u1)
+def proj(v1, u1):
+    return mulVec((dot(v1, u1)/dot(u1, u1)), u1)
 
 
-# print(addVec(mulVec(c1, a), mulVec(c2, b)))
-m = [[1, 1, 4], [0, 2, -6], [1, 1, -1]]
-print(matMulMatrices(mat3x3Inv(m), [[-5], [-18], [-22]]))
-print(matMulMatrices(mat2x2Inv([[-1, 5], [1, -4]]), [[27], [-22]]))
+def mat4x4Inv(M):
+    adjM = []
+    # Get adjugagte matrix
+    for row in range(4):
+        adjM.append([])
+        for col in range(4):
+            # Get 3x3 cofactor matrix
+            cofactor = []
+            for j in range(4):
+                if j == row:
+                    continue
+                cofactor.append([])
+                for i in range(4):
+                    if i == col:
+                        continue
+                    cofactor[-1].append(M[i][j])
+            adjM[row].append(mat3x3Det(cofactor))
+
+    # apply checkerboard pattern
+    for row in range(4):
+        for col in range(4):
+            adjM[row][col] *= (-1)**(col+row+1)
+    # return matMulScalar(adjM, 1/mat4x4Det(M))
+    return adjM
+
+# gram-schimt process
+
+
+def orthogonalBasis(vectors):
+    orthoVectors = [vectors[0]]
+    for i in range(1, len(vectors)):
+        orthoVector = vectors[i]
+        for j in range(0, i):
+            orthoVector = subVec(orthoVector, proj(
+                orthoVector, orthoVectors[j]))
+        orthoVectors.append(orthoVector)
+    return orthoVectors
+
+# fix floating point error in 2d arrays
+
+
+def clean(M):
+    for row in range(len(M)):
+        for col in range(len(M[0])):
+            M[row][col] = round(M[row][col], 1)
+    return M
+
+
+# change of basis for A -> B
+# C = invB*A
+mat = [[8, 7, 6, 4], [-3, 1, -3, 3], [-4, 1, -2, 3]]
+print(matMulMatrices(mat, [[3], [4], [2], [-5]]))
+# question #3
+# vectors = [[2, -6, -4, -2], [2, -2, -2, 0], [-7, -1, 6, 2], [-6, 1, -1, -7]]
+# orthoBasis = clean(orthogonalBasis(vectors))
+# print(orthoBasis)
+# print(dot(orthoBasis[0], orthoBasis[0]))
