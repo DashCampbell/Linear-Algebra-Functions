@@ -1,4 +1,5 @@
 import math
+from fractions import Fraction
 
 #####################################
 #   MATRIX FUNCTIONS
@@ -277,3 +278,23 @@ def cleanVec(v):
     for i in range(len(v)):
         v[i] = round(v[i], 2)
     return v
+
+
+# convert to fraction
+def fracMat(M):
+    for row in range(len(M)):
+        for col in range(len(M[0])):
+            M[row][col] = Fraction(round(M[row][col], 2)).limit_denominator()
+    return M
+
+
+# convert to fraction
+def fracVec(v):
+    for i in range(len(v)):
+        v[i] = Fraction(round(v[i], 2)).limit_denominator()
+    return v
+
+
+mat = [[2, 3, 4], [3, 0, -5], [12, 3, 4]]
+print(fracMat(matInverse(mat)))
+print(Fraction(1, 10))
