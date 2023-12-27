@@ -221,7 +221,7 @@ class Vector:
         if isinstance(rh, Vector):
             # Dot Product
             assert (len(self.vec) == len(rh.vec)), "ERROR: Both vectors must be the same size."
-            return __builtins__.sum(list((self.vec[i] * rh.vec[i]) for i in range(len(self.vec))))
+            return sum(list((self.vec[i] * rh.vec[i]) for i in range(len(self.vec))))
         else:
             # Rh type is scalar
             return Vector(*((c*rh) for c in self.vec))
@@ -281,30 +281,3 @@ class Vector:
             if orthoVector.len() > 0:
                 orthoVectors.append(orthoVector.normalize())
         return orthoVectors
-
-
-# Vector Examples
-v1 = Vector(1, 2, 3)
-v2 = Vector(1,0,-1)
-sum = v1 * 2 + v2   #Output: (3, 4, 5)
-difference = v1 - v2 / 2    #Output: (0.5, 2, 3.5)
-dot_product = v1 * v2   #Output: -2
-cross_product = Vector(1,0,0) // Vector(0,1,0)    #Output: (0, 0, -1)
-
-# Matrix Examples
-m1 = Matrix(2,2,            #Creates a 2x2 Matrix
-            1 + 1j,1 - 1j,  #compatible with complex numbers
-            4 - 5j, 5 + 8j)
-m2 = Matrix(2,2,
-            2, 5,
-            3,-3)
-m3 = Matrix(2, 3,   # Creates a 2x3 Matrix
-            1, 2, 3,
-            4, 4, 4)
-inverse_matrix = m1.inverse()
-determinate = m1.det()
-double = m1 * 2
-_sum = m1 + m2 
-product = m1 * Matrix(2,2,
-                      1,0,
-                      0,1)
