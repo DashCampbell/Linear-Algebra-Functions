@@ -15,7 +15,7 @@ A small scale python library that can perform linear algebra.
 * Calculating the determinate
 * Calculating the transpose
 
-## Example Implemntation
+## Example Implementation
 
 ![](https://github.com/DashCampbell/Linear-Algebra-Functions/blob/master/example.png)
 
